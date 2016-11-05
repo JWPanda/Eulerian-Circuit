@@ -1,0 +1,72 @@
+from copy import copy
+
+''' 
+BFS for graphs
+'''
+def is_connected(Graph):
+	start_node = list(G)[0]
+	color = {v: 'white' for v in G}
+	color[start_node] = 'gray'
+	S = [start_node]
+	while len(S) != 0:
+		i = S.pop()
+		for n in G[i]:
+			if color[n] == 'white':
+				color[n] = 'gray'
+				S.append(n)
+			color[i] = 'black'
+	return list(color.values()).count('black') == len(G)
+
+'''
+returns the verticies of the graph that are of odd degree.
+'''
+def odd_nodes(Graph):
+	dd_degree_nodes = []
+	for i in G:
+		if len(G[i]) % 2 != 0:
+			odd_nodes.append(i)
+	return odd_nodes
+
+'''
+returns the side of the graph in a dictionary format
+'''
+def from_dict(Graph):
+	links = []
+	for i in G:
+		for n in G[i]:
+			links.append((i,v))
+	return links
+
+
+def check_eulerian(Graph):
+	odn = odd_nodes(G)
+	''' 
+	A Eulerian ciruit must have all odd degree verticies
+	'''
+	puts together the 
+	if len(odn) > 2 or len(odn) == 1:
+		return 'Not Eulerian Graph'
+	else:
+		g = copy(G)
+		path = []
+		if len(odn) == 2:
+			i = odn[0]
+		else:
+			i = list(g)[0]
+		while len(from_dict(g)) > 0:
+			current_vertex = i
+			for i in g[current_vertex]:
+				g[current_vertex].remove(i)
+				g[i].remove(current_vertex)
+				bridge = not is_connected(g)
+				if bridge:
+					g[current_vertex].append(i)
+					g[i].append(current_vertex)
+				else:
+					break
+			if bridge:
+				g[current_vertex].remove(i)
+				g[i].remove(current_vertex)
+				g.pop(current_vertex)
+			path.append((current_vertex, i))
+	return path
